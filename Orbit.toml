@@ -1,0 +1,11 @@
+[ip]
+name    = "peripherals"
+library = "io"
+version = "0.1.0"
+vendor  = "crus"
+summary = "common I/O modules"
+
+# To learn more about writing the manifest, see https://c-rus.github.io/orbit/4_topic/2_orbittoml.html
+
+[dependencies]
+crus.util.toolbox = "0.1"
