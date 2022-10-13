@@ -13,7 +13,7 @@
 --!     be interpreted as "on" when that bit is '1'.
 --!
 --!     The following illustration indicates the correspondence between segments
---!     and its of the `output` port:
+--!     and the bits of the `output` port:
 --!                 0
 --!             ========
 --!        5  //      //  1
