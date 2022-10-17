@@ -9,3 +9,4 @@ summary = "common I/O modules"
 
 [dependencies]
 crus.util.toolbox = "0.1"
+crus.chrono.timing = "1.0"

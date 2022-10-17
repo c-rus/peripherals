@@ -2,9 +2,16 @@
 # Do not manually edit this file.
 
 [[ip]]
+name = "crus.chrono.timing"
+version = "1.0.0"
+sum = "d0b93cac9ab09c53da19cd6b5c028b3aac2bf5a6209d3541a00ead9bd051aaee"
+source = "https://github.com/c-rus/timing"
+
+[[ip]]
 name = "crus.io.peripherals"
 version = "0.1.0"
 dependencies = [
+    { name = "crus.chrono.timing", version = "1.0" },
     { name = "crus.util.toolbox", version = "0.1" }
 ]
 

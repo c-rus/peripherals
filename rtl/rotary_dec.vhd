@@ -25,11 +25,15 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+library chrono;
 
 entity rotary_dec is
     generic (
+        --! frequencies for incoming clock and desired clock frequency
+        CLK_IN_FREQ  : natural := 50_000_000;
+        CLK_OUT_FREQ : natural := 1_000;
         --! time to wait between sampling incoming signals
-        DEBOUNCE_PERIOD : natural := 1
+        PERIOD : natural := 2
     );
     port (
         clk       : in   std_logic;
@@ -58,18 +62,24 @@ architecture rtl of rotary_dec is
 
     signal clk_out : std_logic;
     signal enable_clk_n : std_logic;
+    signal enable_clk : std_logic;
+    signal rst : std_logic;
 
 begin
+    rst <= not rst_n;
+    enable_clk <= not enable_clk_n;
+
     -- implement debouncing logic
-    debouncer : entity eel4712c.clk_gen
-    generic map(
-        ms_period => DEBOUNCE_PERIOD
-    )
-    port map(
-        clk50MHz=>clk,
-        rst=>(not rst_n),
-        button_n=>enable_clk_n,
-        clk_out=>clk_out
+    u_debouncer : entity chrono.clk_gen
+    generic map (
+        CLK_IN_FREQ  => CLK_IN_FREQ,
+        CLK_OUT_FREQ => CLK_OUT_FREQ,
+        PERIOD       => PERIOD
+    ) port map (
+        clk_src => clk,
+        rst     => rst,
+        en      => enable_clk,
+        clk_tgt => clk_out
     );
 
     -- process to compute the encoder's next state

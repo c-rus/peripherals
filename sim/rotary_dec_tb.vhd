@@ -7,12 +7,11 @@
 -- Description:
 --
 --------------------------------------------------------------------------------
-
 library ieee;
-library util;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use util.toolbox.all;
+library util;
+use util.toolbox_pkg.all;
 
 entity rotary_dec_tb is
 end entity;
@@ -43,8 +42,8 @@ architecture rtl of rotary_dec_tb is
 	signal left : std_logic;
 	signal valid : std_logic;
 
-	constant clk_period : time := 10 ns;
-	signal done : std_logic := '0';
+	constant PERIOD : time := 20 ns;
+	signal halt : std_logic := '0';
 
 begin
 	--instantiate the DUT
@@ -60,13 +59,13 @@ begin
 	);
 
 	--50% duty clock cycle
-	clk <= not clk after clk_period/2 when (done = '0');
+	clk <= not clk after PERIOD/2 when halt = '0';
 
 	--power-on reset
 	bootup : process
 	begin
 		rst_n <= '0';
-		wait for clk_period*3;
+		wait for PERIOD*3;
 		rst_n <= '1';
 		wait;
 	end process;
@@ -88,6 +87,7 @@ begin
 			channel_a <= '1';
 			channel_b <= '1';
 			wait until rising_edge(clk);
+			wait until rising_edge(clk);
 		end loop;
 
 		report "ROTATE LEFT";
@@ -100,6 +100,7 @@ begin
 			report "is left: " & std_logic'image(left) & " valid: " & std_logic'image(valid);
 			channel_a <= '1';
 			channel_b <= '1';
+			wait until rising_edge(clk);
 			wait until rising_edge(clk);
 		end loop;
 
@@ -114,10 +115,11 @@ begin
 			channel_a <= '1';
 			channel_b <= '1';
 			wait until rising_edge(clk);
+			wait until rising_edge(clk);
 		end loop;
 
-		report "SIMULATION COMPLETE.";
-		done <= '1';
+		report "Simulation complete.";
+		halt <= '1';
 		wait;
 	end process;
 
